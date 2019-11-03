@@ -2,6 +2,7 @@
   <dictionary name="ruslan">
     <words>
       <w>coroutines</w>
+      <w>joda</w>
       <w>kenburnsview</w>
       <w>rxandroid</w>
       <w>rxjava</w>

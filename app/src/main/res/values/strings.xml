@@ -24,4 +24,6 @@
     <string name="step1">Для начала введи имя</string>
     <string name="step2">Теперь выберите дату</string>
     <string name="step3">Если хотите, можете добавить и фотографию</string>
+    <string name="menu_stub">заглушка</string>
+
 </resources>
