@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">ДМБ Таймер</string>
+
+    <string name="percent">проценты</string>
+    <string name="seconds">секунды</string>
+    <string name="minutes">минуты</string>
+    <string name="hours">часы</string>
+    <string name="passed">прошло</string>
+    <string name="left">осталось</string>
+    <string name="days">дни</string>
+    <string name="months_days">месяцы и дни</string>
+    <string name="months_weeks_days">месяцы, недели и дни</string>
+    <string name="weeks_days">недели и дни</string>
+    <string name="next">далее</string>
+    <string name="back">назад</string>
+
+    <array name="my_steps">
+        <item>Имя</item>
+        <item>Дата</item>
+        <item>Фото</item>
+    </array>
+
+    <string name="name">Имя</string>
+    <string name="step1">Для начала введи имя</string>
+    <string name="step2">Теперь выберите дату</string>
+    <string name="step3">Если хотите, можете добавить и фотографию</string>
+</resources>

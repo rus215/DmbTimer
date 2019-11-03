@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            tools:context=".fragments.HomeFragment">
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".fragments.HomeFragment">
+        <info.hoang8f.android.segmented.SegmentedGroup
+                android:id="@+id/textPassed"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                app:sc_border_width="2dp"
+                app:sc_corner_radius="20dp"
+                app:sc_tint_color="@android:color/white"
+                app:sc_checked_text_color="@color/colorPrimaryDark"
+                android:checkedButton="@id/buttonPassed"
+        >
+            <RadioButton
+                    android:id="@+id/buttonPassed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/passed"
+                    style="@style/RadioButton"
+            />
+
+            <RadioButton
+                    android:id="@+id/buttonLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/left"
+                    style="@style/RadioButton"
+            />
+        </info.hoang8f.android.segmented.SegmentedGroup>
+        <flepsik.github.com.progress_ring.ProgressRingView
+                android:id="@+id/ringProgress"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                app:animated="true"
+                android:layout_marginTop="10dp"
+                app:ring_width="20dp"
+                app:animation_duration="1000"
+                app:layout_constraintTop_toBottomOf="@+id/textPassed"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:progress_color="@color/colorPrimaryDark"
+        />
+
+        <TextView
+                android:id="@+id/textProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@+id/ringProgress"
+                app:layout_constraintBottom_toBottomOf="@+id/ringProgress"
+                app:layout_constraintRight_toRightOf="@+id/ringProgress"
+                app:layout_constraintLeft_toLeftOf="@+id/ringProgress"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                tools:text="0.264455%"
+        />
+        <HorizontalScrollView
+                android:id="@+id/buttons_scroll"
+                android:layout_width="0dp" android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ringProgress"
+                android:layout_marginTop="10dp"
+                android:scrollbars="none"
+        >
+            <com.google.android.material.chip.ChipGroup android:layout_width="wrap_content"
+                                                        app:singleLine="true"
+                                                        app:singleSelection="true"
+                                                        android:layout_height="wrap_content">
+                <com.google.android.material.chip.Chip
+                        android:id="@+id/chipPercent"
+                        android:layout_width="wrap_content"
+                        android:text="@string/percent"
+                        android:textColor="@android:color/white"
+                        app:chipStrokeWidth="2dp"
+                        app:chipBackgroundColor="@android:color/transparent"
+                        app:chipStrokeColor="@android:color/white"
+                        android:checkable="true"
+                        android:checked="true"
+                        android:layout_height="wrap_content"/>
+                <com.google.android.material.chip.Chip
+                        android:id="@+id/chipSeconds"
+                        android:layout_width="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:text="@string/seconds"
+                        app:chipStrokeWidth="2dp"
+                        app:chipBackgroundColor="@android:color/transparent"
+                        app:chipStrokeColor="@android:color/white"
+                        android:checkable="true"
+                        android:layout_height="wrap_content"/>
+                <com.google.android.material.chip.Chip
+                        android:id="@+id/chipMinutes"
+                        android:layout_width="wrap_content"
+                        android:textColor="@android:color/white"
+                        app:chipStrokeWidth="2dp"
+                        app:chipBackgroundColor="@android:color/transparent"
+                        app:chipStrokeColor="@android:color/white"
+                        android:checkable="true"
+                        android:text="@string/minutes"
+                        android:layout_height="wrap_content"/>
+                <com.google.android.material.chip.Chip
+                        android:id="@+id/chipHours"
+                        android:layout_width="wrap_content"
+                        android:textColor="@android:color/white"
+                        app:chipStrokeWidth="2dp"
+                        app:chipBackgroundColor="@android:color/transparent"
+                        app:chipStrokeColor="@android:color/white"
+                        android:checkable="true"
+                        android:text="@string/hours"
+                        android:layout_height="wrap_content"/>
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cardInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="@drawable/transparent_block"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/buttons_scroll"
+        >
+
+            <TextView
+                    android:id="@+id/textPassedTitle"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="20dp"
+                    android:textColor="@android:color/white"
+                    android:text="@string/passed"
+                    app:layout_constraintRight_toLeftOf="@+id/textLeftTitle"
+                    android:textAllCaps="true"
+                    android:textSize="20sp"
+            />
+
+            <TextView
+                    android:id="@+id/textPassedValue"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/textPassedTitle"
+                    app:layout_constraintLeft_toLeftOf="@+id/textPassedTitle"
+                    app:layout_constraintRight_toRightOf="@+id/textPassedTitle"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@android:color/white"
+                    tools:text="дней: 0"
+                    android:textSize="14sp"
+            />
+
+            <TextView
+                    android:id="@+id/textPassedHours"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/textPassedValue"
+                    app:layout_constraintLeft_toLeftOf="@+id/textPassedTitle"
+                    app:layout_constraintRight_toRightOf="@+id/textPassedTitle"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@android:color/white"
+                    tools:text="часов: 12"
+                    android:textSize="12sp"
+            />
+            <TextView
+                    android:id="@+id/textPassedMinutes"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/textPassedHours"
+                    app:layout_constraintLeft_toLeftOf="@+id/textPassedTitle"
+                    app:layout_constraintRight_toRightOf="@+id/textPassedTitle"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/white"
+                    tools:text="минут: 08"
+                    android:textSize="12sp"
+            />
+            <TextView
+                    android:id="@+id/textPassedSeconds"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/textPassedMinutes"
+                    app:layout_constraintLeft_toLeftOf="@+id/textPassedTitle"
+                    app:layout_constraintRight_toRightOf="@+id/textPassedTitle"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/white"
+                    tools:text="секунд: 12"
+                    android:textSize="12sp"
+            />
+
+            <TextView
+                    android:id="@+id/textLeftTitle"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/textPassedTitle"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="20dp"
+                    android:textColor="@android:color/white"
+                    android:text="@string/left"
+                    android:textAllCaps="true"
+                    android:textSize="20sp"
+            />
+
+            <TextView
+                    android:id="@+id/textLeftValue"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/textLeftTitle"
+                    app:layout_constraintLeft_toLeftOf="@+id/textLeftTitle"
+                    app:layout_constraintRight_toRightOf="@+id/textLeftTitle"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@android:color/white"
+                    tools:text="дней: 0"
+                    android:textSize="14sp"
+            />
+
+            <TextView
+                    android:id="@+id/textLeftHours"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/textLeftValue"
+                    app:layout_constraintLeft_toLeftOf="@+id/textLeftTitle"
+                    app:layout_constraintRight_toRightOf="@+id/textLeftTitle"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@android:color/white"
+                    tools:text="часов: 12"
+                    android:textSize="12sp"
+            />
+            <TextView
+                    android:id="@+id/textLeftMinutes"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/textLeftHours"
+                    app:layout_constraintLeft_toLeftOf="@+id/textLeftTitle"
+                    app:layout_constraintRight_toRightOf="@+id/textLeftTitle"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/white"
+                    tools:text="минут: 08"
+                    android:textSize="12sp"
+            />
+            <TextView
+                    android:id="@+id/textLeftSeconds"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/textLeftMinutes"
+                    app:layout_constraintLeft_toLeftOf="@+id/textLeftTitle"
+                    app:layout_constraintRight_toRightOf="@+id/textLeftTitle"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/white"
+                    tools:text="секунд: 12"
+                    android:textSize="12sp"
+            />
+
+            <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/barrier"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_width="0dp" android:layout_height="wrap_content" app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="textLeftSeconds,textPassedSeconds"/>
+
+            <HorizontalScrollView
+                    android:id="@+id/block_buttons_scroll"
+                    android:layout_width="0dp" android:layout_height="wrap_content"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/barrier"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_margin="10dp"
+                    android:scrollbars="none"
+            >
+                <com.google.android.material.chip.ChipGroup android:layout_width="wrap_content"
+                                                            android:layout_height="wrap_content"
+                                                            app:singleLine="true"
+                                                            app:singleSelection="true">
+                    <com.google.android.material.chip.Chip
+                            android:id="@+id/chipDays"
+                            android:layout_width="wrap_content"
+                            android:text="@string/days"
+                            android:checked="true"
+                            app:chipStrokeWidth="2dp"
+                            app:chipBackgroundColor="@android:color/transparent"
+                            app:chipStrokeColor="@android:color/white"
+                            android:checkable="true"
+                            android:textColor="@android:color/white"
+                            android:layout_height="wrap_content"/>
+                    <com.google.android.material.chip.Chip
+                            android:id="@+id/chipMonthDays"
+                            android:layout_width="wrap_content"
+                            android:textColor="@android:color/white"
+                            android:text="@string/months_days"
+                            app:chipStrokeWidth="2dp"
+                            app:chipBackgroundColor="@android:color/transparent"
+                            app:chipStrokeColor="@android:color/white"
+                            android:checkable="true"
+                            android:layout_height="wrap_content"/>
+                    <com.google.android.material.chip.Chip
+                            android:id="@+id/chipMonthsWeeks"
+                            android:layout_width="wrap_content"
+                            android:textColor="@android:color/white"
+                            app:chipStrokeWidth="2dp"
+                            app:chipBackgroundColor="@android:color/transparent"
+                            app:chipStrokeColor="@android:color/white"
+                            android:checkable="true"
+                            android:text="@string/months_weeks_days"
+                            android:layout_height="wrap_content"/>
+                    <com.google.android.material.chip.Chip
+                            android:id="@+id/chipWeeksDays"
+                            android:layout_width="wrap_content"
+                            android:textColor="@android:color/white"
+                            android:text="@string/weeks_days"
+                            app:chipStrokeWidth="2dp"
+                            app:chipBackgroundColor="@android:color/transparent"
+                            app:chipStrokeColor="@android:color/white"
+                            android:checkable="true"
+                            android:layout_height="wrap_content"/>
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
