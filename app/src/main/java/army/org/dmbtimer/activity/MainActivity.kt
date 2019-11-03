@@ -2,46 +2,59 @@ package army.org.dmbtimer.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import army.org.dmbtimer.R
+import army.org.dmbtimer.fragments.EmptyFragment
 import army.org.dmbtimer.fragments.HomeFragment
-import army.org.dmbtimer.menu.MenuConst.*
-import com.etebarian.meowbottomnavigation.MeowBottomNavigation
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initMenu(findViewById(R.id.navigation_bar))
+
+        //Инициализация меню
+        initMenu()
+
+        //Загружаем home фрагмент
         val fm: FragmentManager = supportFragmentManager
         val ft = fm.beginTransaction()
         ft.add(R.id.fragment, HomeFragment())
         ft.commit()
     }
 
-    private fun initMenu(meowBottomNavigation: MeowBottomNavigation) {
-        meowBottomNavigation.add(MeowBottomNavigation.Model(HOME.ordinal, R.drawable.ic_home))
-        meowBottomNavigation.add(MeowBottomNavigation.Model(CALENDAR.ordinal, R.drawable.ic_calendar))
-        meowBottomNavigation.add(MeowBottomNavigation.Model(EVENT.ordinal, R.drawable.ic_event))
-        meowBottomNavigation.add(MeowBottomNavigation.Model(PROFILE.ordinal, R.drawable.ic_profile))
-        meowBottomNavigation.add(MeowBottomNavigation.Model(SETTINGS.ordinal, R.drawable.ic_settings))
+    private fun initMenu() {
 
-        meowBottomNavigation.show(HOME.ordinal, false)
 
-        meowBottomNavigation.setOnClickMenuListener {
-            when (it.id) {
-                HOME.ordinal -> {
+        navigation_bar.setOnNavigationItemSelectedListener {
+            var currFragment: Fragment = HomeFragment()
+
+            when (it.itemId) {
+                R.id.calendar -> {
+                    currFragment = EmptyFragment()
                 }
-                CALENDAR.ordinal -> {
+                R.id.events -> {
+                    currFragment = EmptyFragment()
                 }
-                EVENT.ordinal -> {
+                R.id.profile -> {
+                    currFragment = EmptyFragment()
                 }
-                PROFILE.ordinal -> {
-                }
-                SETTINGS.ordinal -> {
+                R.id.settings -> {
+                    currFragment = EmptyFragment()
                 }
             }
+            val fm: FragmentManager = supportFragmentManager
+            val ft = fm.beginTransaction()
+            ft.replace(R.id.fragment, currFragment)
+            ft.commit()
+
+            return@setOnNavigationItemSelectedListener true
+        }
+
+        navigation_bar.setOnNavigationItemReselectedListener {
+            //Заглушка на повторный выбор элемента меню
         }
     }
 
