@@ -25,71 +25,122 @@ class DateUtil(timeInMills: Long) {
     /**
      * @return - Количество прошедших секунд с начала призыва до текущей даты
      */
-    fun passedTimeInSec(): Seconds = Seconds.secondsBetween(startDate, nowDate)
+    fun passedTimeInSec(): Int = Seconds.secondsBetween(startDate, nowDate).seconds
 
     /**
      * @return - Количество прошедших секунд с начала призыва до ДМБ
      */
-    fun totalTimeInSec(): Seconds = Seconds.secondsBetween(startDate, finisDate)
+    fun totalTimeInSec(): Int = Seconds.secondsBetween(startDate, finisDate).seconds
 
     /**
-     * @return - Количество прошедших дней с начала призыва до текущей даты
+     * @param diffDays - true, если необходимы дни с учетом месяцев и недель,
+     * false для общего количества дней
+     *
+     * @return - Количество прошедших дней
      */
-    fun passedDays(): Days = Days.daysBetween(startDate, nowDate)
+    fun passedDays(diffDays: Boolean = false): Int =
+        if (diffDays) {
+            Period(startDate, nowDate).days
+        } else {
+            Days.daysBetween(startDate, nowDate).days
+        }
+
+    /**
+     * @return - Количество прошедших месяцев
+     */
+    fun passedMonths(): Int = Period(startDate, nowDate).months
+
+    /**
+     * @param diffWeeks - true, если необходимы недели с учетом месяцев и дней,
+     * false для общего количества недель
+     *
+     * @return - Количество прошедших недель
+     */
+    fun passedWeeks(diffWeeks: Boolean = false): Int =
+        if (diffWeeks) {
+            Period(startDate, nowDate).weeks
+        } else {
+            Weeks.weeksBetween(startDate, nowDate).weeks
+        }
 
     /**
      * @return - Количество прошедших часов с начала призыва до текущей даты с учетом дней
      */
-    fun passedHours(): Hours = Hours.hoursBetween(startDate, nowDate).minus(passedDays().days * 24)
+    fun passedHours(): Int = Hours.hoursBetween(startDate, nowDate).minus(passedDays() * 24).hours
 
     /**
      * @return - Количество прошедших минут с начала призыва до текущей даты с учетом дней и часов
      */
-    fun passedMinutes(): Minutes =
+    fun passedMinutes(): Int =
         Minutes.minutesBetween(
             startDate,
             nowDate
-        ).minus(passedDays().days * 24 * 60).minus(passedHours().hours * 60)
+        ).minus(passedDays() * 24 * 60).minus(passedHours() * 60).minutes
 
     /**
      * @return - Количество прошедших секунд с начала призыва до текущей даты с учетом дней, часов и минут
      */
-    fun passedSeconds(): Seconds =
+    fun passedSeconds(): Int =
         Seconds.secondsBetween(
             startDate,
             nowDate
-        ).minus(passedDays().days * 24 * 60 * 60).minus(passedHours().hours * 60 * 60).minus(
-            passedMinutes().minutes * 60
-        )
+        ).minus(passedDays() * 24 * 60 * 60).minus(passedHours() * 60 * 60).minus(
+            passedMinutes() * 60
+        ).seconds
 
     /**
+     * @param diffDays - true, если необходимы дни с учетом месяцев и недель,
+     * false для общего количества дней
+     *
      * @return - Количество оставшихся дней с текущей даты до ДМБ
      */
-    fun leftDays(): Days = Days.daysBetween(nowDate, finisDate)
+    fun leftDays(diffDays: Boolean = false): Int =
+        if (diffDays) {
+            Period(nowDate, finisDate).days
+        } else {
+            Days.daysBetween(nowDate, finisDate).days
+        }
+
+    /**
+     * @return - Количество оставшихся месяцев
+     */
+    fun leftMonths(): Int = Period(nowDate, finisDate).months
+
+    /**
+     * @param diffWeeks - true, если необходимы недели с учетом месяцев и дней,
+     * false для общего количества недель
+     *
+     * @return - Количество оставшихся недель
+     */
+    fun leftWeeks(diffWeeks: Boolean = false): Int =
+        if (diffWeeks) {
+            Period(nowDate, finisDate).weeks
+        } else {
+            Weeks.weeksBetween(nowDate, finisDate).weeks
+        }
 
     /**
      * @return - Количество оставшихся часов с текущей даты до ДМБ с учетом дней
      */
-    fun leftHours(): Hours = Hours.hoursBetween(nowDate, finisDate).minus(leftDays().days * 24)
+    fun leftHours(): Int = Hours.hoursBetween(nowDate, finisDate).minus(leftDays() * 24).hours
 
     /**
      * @return - Количество оставшихся минут с текущей даты до ДМБ с учетом дней и часов
      */
-    fun leftMinutes(): Minutes =
+    fun leftMinutes(): Int =
         Minutes.minutesBetween(
             nowDate,
             finisDate
-        ).minus(leftDays().days * 24 * 60).minus(leftHours().hours * 60)
+        ).minus(leftDays() * 24 * 60).minus(leftHours() * 60).minutes
 
     /**
      * @return - Количество оставшихся секунд с текущей даты до ДМБ с учетом дней, часов и минут
      */
-    fun leftSeconds(): Seconds =
+    fun leftSeconds(): Int =
         Seconds.secondsBetween(
             nowDate,
             finisDate
-        ).minus(leftDays().days * 24 * 60 * 60).minus(leftHours().hours * 60 * 60).minus(
-            leftMinutes().minutes * 60
-        )
-
+        ).minus(leftDays() * 24 * 60 * 60).minus(leftHours() * 60 * 60).minus(
+            leftMinutes() * 60
+        ).seconds
 }

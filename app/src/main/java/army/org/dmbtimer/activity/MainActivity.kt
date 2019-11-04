@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     private fun initMenu() {
 
 
-        navigation_bar.setOnNavigationItemSelectedListener {
+        navigationBar.setOnNavigationItemSelectedListener {
             var currFragment: Fragment = HomeFragment()
 
             when (it.itemId) {
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
             return@setOnNavigationItemSelectedListener true
         }
 
-        navigation_bar.setOnNavigationItemReselectedListener {
+        navigationBar.setOnNavigationItemReselectedListener {
             //Заглушка на повторный выбор элемента меню
         }
     }

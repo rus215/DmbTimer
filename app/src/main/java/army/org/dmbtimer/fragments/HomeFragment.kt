@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -28,13 +29,17 @@ class HomeFragment : Fragment() {
 
 
     //Прошедшее время
-    private var passedValue: Int = 0
+    private var passedDays: Int = 0
+    private var passedWeeks: Int = 0
+    private var passedMonths: Int = 0
     private var passedHours: Int = 0
     private var passedMinutes: Int = 0
     private var passedSeconds: Int = 0
 
     //Оставшееся время
-    private var leftValue: Int = 0
+    private var leftDays: Int = 0
+    private var leftWeeks: Int = 0
+    private var leftMonths: Int = 0
     private var leftHours: Int = 0
     private var leftMinutes: Int = 0
     private var leftSeconds: Int = 0
@@ -55,7 +60,10 @@ class HomeFragment : Fragment() {
         super.onStart()
 
         val soldierViewModel: SoldierViewModel =
-            ViewModelProvider(this,ViewModelProvider.AndroidViewModelFactory(activity!!.application)).get(SoldierViewModel::class.java)
+            ViewModelProvider(
+                this,
+                ViewModelProvider.AndroidViewModelFactory(activity!!.application)
+            ).get(SoldierViewModel::class.java)
         //Проверяем есть ли солдаты в базе данных
         soldierViewModel.allSoldiers.observe(this, Observer {
             if (it.isEmpty()) {
@@ -68,6 +76,29 @@ class HomeFragment : Fragment() {
                 calculate()
             }
         })
+
+        //Инициализируем chips
+        initChips()
+    }
+
+    private fun initChips() {
+
+
+        val onClickListener = View.OnClickListener {
+            (it as CompoundButton).isChecked = true
+        }
+
+        //Chip progress
+        chipPercent.setOnClickListener(onClickListener)
+        chipSeconds.setOnClickListener(onClickListener)
+        chipMinutes.setOnClickListener(onClickListener)
+        chipHours.setOnClickListener(onClickListener)
+
+        //Chip statistic
+        chipDays.setOnClickListener(onClickListener)
+        chipMonthDays.setOnClickListener(onClickListener)
+        chipMonthsWeeksAndDays.setOnClickListener(onClickListener)
+        chipWeeksDays.setOnClickListener(onClickListener)
     }
 
     private fun calculate() {
@@ -93,7 +124,7 @@ class HomeFragment : Fragment() {
                         passedHours++
                     }
                     passedHours > 23 -> {
-                        passedValue++
+                        passedDays++
                         passedHours = 0
                     }
                 }
@@ -108,47 +139,161 @@ class HomeFragment : Fragment() {
                         leftHours--
                     }
                     leftHours < 0 -> {
-                        leftValue--
                         leftHours = 23
                     }
                 }
                 //Индикатор прогресса
-                textProgress.text = String.format("%3.6f%%", (pastNum / totalNum) * 100)
+                if (buttonLeft.isChecked) {
+                    when (progressChipGroup.checkedChipId) {
+                        R.id.chipPercent -> {
+                            textProgress.text =
+                                String.format("%3.6f%%", 100 - (pastNum / totalNum) * 100)
+                        }
+
+                        R.id.chipSeconds -> {
+                            textProgress.text =
+                                String.format("%.0f сек.\nиз\n%.0f", totalNum - pastNum, totalNum)
+                        }
+
+                        R.id.chipMinutes -> {
+                            val pMin = totalNum / 60
+                            textProgress.text =
+                                String.format("%.0f мин.\nиз\n%.0f", pMin - pastNum / 60, pMin)
+                        }
+
+                        R.id.chipHours -> {
+                            val pHours = totalNum / 3600
+                            textProgress.text =
+                                String.format("%.0f ч.\nиз\n%.0f", pHours - pastNum / 3600, pHours)
+
+                        }
+                    }
+                } else {
+                    when (progressChipGroup.checkedChipId) {
+                        R.id.chipPercent -> {
+                            textProgress.text = String.format("%3.6f%%", (pastNum / totalNum) * 100)
+                        }
+
+                        R.id.chipSeconds -> {
+                            textProgress.text =
+                                String.format("%d сек.\nиз\n%.0f", pastNum, totalNum)
+                        }
+
+                        R.id.chipMinutes -> {
+                            textProgress.text =
+                                String.format("%d мин.\nиз\n%.0f", pastNum / 60, totalNum / 60)
+                        }
+
+                        R.id.chipHours -> {
+                            textProgress.text =
+                                String.format("%d ч.\nиз\n%.0f", pastNum / 3600, totalNum / 3600)
+
+                        }
+                    }
+                }
                 ringProgress.progress = pastNum / totalNum
 
-                //Прошедшее время
-                textPassedValue.text = String.format("дней: %d", passedValue)
+                when (statisticChipGroup.checkedChipId) {
+                    R.id.chipDays -> {
+
+                        passedDays = dateUtil.passedDays()
+                        //Прошедшие дни
+                        textPassedValue.text = String.format("дней: %d", passedDays)
+
+                        leftDays = dateUtil.leftDays()
+                        //Оставшееся дни
+                        textLeftValue.text = String.format("дней: %d", leftDays)
+                    }
+
+                    R.id.chipMonthDays -> {
+
+                        passedMonths = dateUtil.passedMonths()
+                        passedDays = dateUtil.passedDays(true) + dateUtil.passedWeeks(true)
+                        //Прошедшие месяцы и дни
+                        textPassedValue.text =
+                            String.format("месяцев: %d\nдней: %d", passedMonths, passedDays)
+
+                        leftMonths = dateUtil.leftMonths()
+                        leftDays = dateUtil.leftDays(true) + dateUtil.leftWeeks(true) * 7
+                        //Оставшееся месяцы и дни
+                        textLeftValue.text =
+                            String.format("месяцев: %d\nдней: %d", leftMonths, leftDays)
+                    }
+
+                    R.id.chipMonthsWeeksAndDays -> {
+
+                        passedMonths = dateUtil.passedMonths()
+                        passedWeeks = dateUtil.passedWeeks(true)
+                        passedDays = dateUtil.passedDays(true)
+                        //Прошедшие месяцы и недели
+                        textPassedValue.text =
+                            String.format(
+                                "месяцев: %d\nнедель: %d\nдней: %d",
+                                passedMonths,
+                                passedWeeks,
+                                passedDays
+                            )
+
+                        leftMonths = dateUtil.leftMonths()
+                        leftWeeks = dateUtil.leftWeeks(true)
+                        leftDays = dateUtil.leftDays(true)
+                        //Оставшееся месяцы и недели
+                        textLeftValue.text =
+                            String.format(
+                                "месяцев: %d\nнедель: %d\nдней: %d",
+                                leftMonths,
+                                leftWeeks,
+                                leftDays
+                            )
+                    }
+
+                    R.id.chipWeeksDays -> {
+
+                        passedWeeks = dateUtil.passedWeeks()
+                        passedDays = dateUtil.passedDays(true)
+                        //Прошедшие недели и дни
+                        textPassedValue.text =
+                            String.format("недель: %d\nдней: %d", passedWeeks, passedDays)
+
+                        leftWeeks = dateUtil.leftWeeks()
+                        leftDays = dateUtil.leftDays(true)
+                        //Оставшееся недели и дни
+                        textLeftValue.text =
+                            String.format("недель: %d\nдней: %d", leftWeeks, leftDays)
+                    }
+                }
+
+                //Прошедшедшее время
                 textPassedHours.text = String.format("часов: %02d", passedHours)
                 textPassedMinutes.text = String.format("минут: %02d", passedMinutes)
                 textPassedSeconds.text = String.format("секунд: %02d", passedSeconds)
 
                 //Оставшееся время
-                textLeftValue.text = String.format("дней: %d", leftValue)
                 textLeftHours.text = String.format("часов: %02d", leftHours)
                 textLeftMinutes.text = String.format("минут: %02d", leftMinutes)
                 textLeftSeconds.text = String.format("секунд: %02d", leftSeconds)
             }
 
-
     }
+
 
     private fun initVariables() {
         //Прошло время в секундах
-        pastNum = dateUtil.passedTimeInSec().seconds
+        pastNum = dateUtil.passedTimeInSec()
         //Общее время
-        totalNum = dateUtil.totalTimeInSec().seconds.toFloat()
+        totalNum = dateUtil.totalTimeInSec().toFloat()
 
         //Прошло
-        passedValue = dateUtil.passedDays().days
-        passedHours = dateUtil.passedHours().hours
-        passedMinutes = dateUtil.passedMinutes().minutes
-        passedSeconds = dateUtil.passedSeconds().seconds
+        passedDays = dateUtil.passedDays()
+        passedHours = dateUtil.passedHours()
+        passedMinutes = dateUtil.passedMinutes()
+        passedSeconds = dateUtil.passedSeconds()
 
         //Осталось
-        leftValue = dateUtil.leftDays().days
-        leftHours = dateUtil.leftHours().hours
-        leftMinutes = dateUtil.leftMinutes().minutes
-        leftSeconds = dateUtil.leftSeconds().seconds
+        leftDays = dateUtil.leftDays()
+        leftHours = dateUtil.leftHours()
+        leftMinutes = dateUtil.leftMinutes()
+        leftSeconds = dateUtil.leftSeconds()
     }
 
     override fun onDestroy() {
