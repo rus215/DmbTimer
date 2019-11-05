@@ -124,7 +124,6 @@ class HomeFragment : Fragment() {
                         passedHours++
                     }
                     passedHours > 23 -> {
-                        passedDays++
                         passedHours = 0
                     }
                 }
@@ -193,6 +192,7 @@ class HomeFragment : Fragment() {
                 }
                 ringProgress.progress = pastNum / totalNum
 
+                //Рассчет даты и времени
                 when (statisticChipGroup.checkedChipId) {
                     R.id.chipDays -> {
 
@@ -208,7 +208,7 @@ class HomeFragment : Fragment() {
                     R.id.chipMonthDays -> {
 
                         passedMonths = dateUtil.passedMonths()
-                        passedDays = dateUtil.passedDays(true) + dateUtil.passedWeeks(true)
+                        passedDays = dateUtil.passedDays(true) + dateUtil.passedWeeks(true) * 7
                         //Прошедшие месяцы и дни
                         textPassedValue.text =
                             String.format("месяцев: %d\nдней: %d", passedMonths, passedDays)
@@ -250,13 +250,13 @@ class HomeFragment : Fragment() {
                     R.id.chipWeeksDays -> {
 
                         passedWeeks = dateUtil.passedWeeks()
-                        passedDays = dateUtil.passedDays(true)
+                        passedDays = dateUtil.passedDays() - passedWeeks * 7
                         //Прошедшие недели и дни
                         textPassedValue.text =
                             String.format("недель: %d\nдней: %d", passedWeeks, passedDays)
 
                         leftWeeks = dateUtil.leftWeeks()
-                        leftDays = dateUtil.leftDays(true)
+                        leftDays = dateUtil.leftDays() - leftWeeks * 7
                         //Оставшееся недели и дни
                         textLeftValue.text =
                             String.format("недель: %d\nдней: %d", leftWeeks, leftDays)
@@ -284,13 +284,11 @@ class HomeFragment : Fragment() {
         totalNum = dateUtil.totalTimeInSec().toFloat()
 
         //Прошло
-        passedDays = dateUtil.passedDays()
         passedHours = dateUtil.passedHours()
         passedMinutes = dateUtil.passedMinutes()
         passedSeconds = dateUtil.passedSeconds()
 
         //Осталось
-        leftDays = dateUtil.leftDays()
         leftHours = dateUtil.leftHours()
         leftMinutes = dateUtil.leftMinutes()
         leftSeconds = dateUtil.leftSeconds()
