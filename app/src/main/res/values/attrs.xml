@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LinearGraphView">
+
+        <attr name="lgv_border_color" format="color" />
+
+        <attr name="lgv_border_anim_duration" format="integer" />
+
+    </declare-styleable>
+
+</resources>

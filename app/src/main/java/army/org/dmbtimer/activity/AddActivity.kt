@@ -18,8 +18,8 @@ import java.util.*
 
 class AddActivity : AppCompatActivity(), UserNameFragment.OnFragmentUserTextChangeListener,
     UserDateFragment.OnFragmentDateChangedListener, UserPhotoFragment.OnUserChoosePhotoListener {
-    override fun onPhotoChoose(file: String) {
-        userPhoto = file
+    override fun onPhotoChoose(uri: String) {
+        userPhoto = uri
     }
 
     override fun onDateChanged(calendar: Calendar) {

@@ -2,11 +2,16 @@ package army.org.dmbtimer.fragments
 
 
 import android.content.Intent
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
+import android.widget.HorizontalScrollView
+import android.widget.Toast
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -14,9 +19,15 @@ import army.org.dmbtimer.R
 import army.org.dmbtimer.activity.AddActivity
 import army.org.dmbtimer.room.database.SoldierViewModel
 import army.org.dmbtimer.utils.DateUtil
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.PercentFormatter
+import com.github.mikephil.charting.utils.ColorTemplate
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.concurrent.TimeUnit
@@ -25,7 +36,7 @@ import java.util.concurrent.TimeUnit
 class HomeFragment : Fragment() {
 
     private lateinit var dateUtil: DateUtil
-    private var disposable: Disposable? = null
+    private var disposable: CompositeDisposable = CompositeDisposable()
 
 
     //Прошедшее время
@@ -72,13 +83,42 @@ class HomeFragment : Fragment() {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 startActivity(intent)
             } else {
+                textName.text = it[0].name
                 dateUtil = DateUtil(it[0].startDate)
                 calculate()
+                it[0].userImage?.let { userImage ->
+                    disposable.add(Single.just(userImage)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { uri, _ ->
+                            userPhoto.setImageURI(Uri.parse(uri))
+                        })
+                }
+
             }
         })
 
         //Инициализируем chips
         initChips()
+
+        //Инициализируем кнопки прокрутки
+        initScrollButtons()
+    }
+
+    private fun initScrollButtons() {
+        val onClickListener = View.OnClickListener {
+            it?.apply {
+                if (id == R.id.moveToLeft) {
+                    statistic_buttons_scroll.fullScroll(HorizontalScrollView.FOCUS_LEFT)
+                } else {
+                    statistic_buttons_scroll.fullScroll(HorizontalScrollView.FOCUS_RIGHT)
+                }
+            }
+
+        }
+
+        moveToRight.setOnClickListener(onClickListener)
+        moveToLeft.setOnClickListener(onClickListener)
     }
 
     private fun initChips() {
@@ -105,8 +145,11 @@ class HomeFragment : Fragment() {
 
         //Инициализация переменных
         initVariables()
+        //Инициализация диаграммы
+        initDiagram()
 
-        disposable = Observable.interval(1, TimeUnit.SECONDS)
+
+        disposable.add(Observable.interval(1, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
@@ -146,12 +189,16 @@ class HomeFragment : Fragment() {
                     when (progressChipGroup.checkedChipId) {
                         R.id.chipPercent -> {
                             textProgress.text =
-                                String.format("%3.6f%%", 100 - (pastNum / totalNum) * 100)
+                                String.format("%3.6f %%", 100 - (pastNum / totalNum) * 100)
                         }
 
                         R.id.chipSeconds -> {
                             textProgress.text =
-                                String.format("%.0f сек.\nиз\n%.0f", totalNum - pastNum, totalNum)
+                                String.format(
+                                    "%.0f сек.\nиз\n%.0f",
+                                    totalNum - pastNum,
+                                    totalNum
+                                )
                         }
 
                         R.id.chipMinutes -> {
@@ -163,14 +210,19 @@ class HomeFragment : Fragment() {
                         R.id.chipHours -> {
                             val pHours = totalNum / 3600
                             textProgress.text =
-                                String.format("%.0f ч.\nиз\n%.0f", pHours - pastNum / 3600, pHours)
+                                String.format(
+                                    "%.0f ч.\nиз\n%.0f",
+                                    pHours - pastNum / 3600,
+                                    pHours
+                                )
 
                         }
                     }
                 } else {
                     when (progressChipGroup.checkedChipId) {
                         R.id.chipPercent -> {
-                            textProgress.text = String.format("%3.6f%%", (pastNum / totalNum) * 100)
+                            textProgress.text =
+                                String.format("%3.6f %%", (pastNum / totalNum) * 100)
                         }
 
                         R.id.chipSeconds -> {
@@ -185,12 +237,18 @@ class HomeFragment : Fragment() {
 
                         R.id.chipHours -> {
                             textProgress.text =
-                                String.format("%d ч.\nиз\n%.0f", pastNum / 3600, totalNum / 3600)
+                                String.format(
+                                    "%d ч.\nиз\n%.0f",
+                                    pastNum / 3600,
+                                    totalNum / 3600
+                                )
 
                         }
                     }
                 }
-                ringProgress.progress = pastNum / totalNum
+
+                //Устанавливаем прогрес
+                //progressBar.percent(pastNum / totalNum)
 
                 //Рассчет даты и времени
                 when (statisticChipGroup.checkedChipId) {
@@ -272,7 +330,7 @@ class HomeFragment : Fragment() {
                 textLeftHours.text = String.format("часов: %02d", leftHours)
                 textLeftMinutes.text = String.format("минут: %02d", leftMinutes)
                 textLeftSeconds.text = String.format("секунд: %02d", leftSeconds)
-            }
+            })
 
     }
 
@@ -294,10 +352,58 @@ class HomeFragment : Fragment() {
         leftSeconds = dateUtil.leftSeconds()
     }
 
+    private fun initDiagram() {
+        //Инициализация диаграммы
+        val pastPercent = pastNum / totalNum
+        val items = listOf(PieEntry(pastPercent, "Прошло"), PieEntry(1 - pastPercent, "Осталось"))
+        val pieDataSet = PieDataSet(items, "")
+        pieDataSet.setDrawIcons(false)
+
+        //Разделение диаграммы
+        pieDataSet.sliceSpace = 3f
+        //Убираеи возможность выбора
+        pieDataSet.selectionShift = 0f
+
+        //Настраиваем цвета
+        pieDataSet.colors = listOf(ColorTemplate.rgb("#1b5e20"), ColorTemplate.rgb("#304ffe"))
+
+        //Настраиваем значения, выбирвем проценты
+        val pieData = PieData(pieDataSet)
+        pieData.setValueTextColor(Color.WHITE)
+        pieData.setValueFormatter(PercentFormatter(diagram))
+
+        //Добавляем данные на диаграмму
+        diagram.data = pieData
+        diagram.setUsePercentValues(true)
+
+        //Отключение легенды
+        diagram.legend.isEnabled = false
+
+        //Коэффциент вращения
+        diagram.dragDecelerationFrictionCoef = 0.95f
+
+        //Привращаем диаграмму в кольцевую
+        diagram.isDrawHoleEnabled = true
+        diagram.setHoleColor(Color.TRANSPARENT)
+        diagram.setTransparentCircleColor(Color.WHITE)
+        diagram.setTransparentCircleAlpha(110)
+        diagram.holeRadius = 50f
+        diagram.transparentCircleRadius = 61f
+
+        //Изначальный угол
+        diagram.rotationAngle = 0F
+        //Разрешить вращение
+        diagram.isRotationEnabled = true
+        //Убираем описание диаграммы
+        diagram.description.isEnabled = false
+
+        //Обновляем диаграмму
+        diagram.invalidate()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         //Очищаем стрим
-        disposable?.dispose()
-
+        disposable.dispose()
     }
 }

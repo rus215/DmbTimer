@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import army.org.dmbtimer.R
-import army.org.dmbtimer.fragments.EmptyFragment
+import army.org.dmbtimer.fragments.CalendarFragment
 import army.org.dmbtimer.fragments.HomeFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -33,16 +33,16 @@ class MainActivity : AppCompatActivity() {
 
             when (it.itemId) {
                 R.id.calendar -> {
-                    currFragment = EmptyFragment()
+                    currFragment = CalendarFragment()
                 }
                 R.id.events -> {
-                    currFragment = EmptyFragment()
+                    currFragment = CalendarFragment()
                 }
                 R.id.profile -> {
-                    currFragment = EmptyFragment()
+                    currFragment = CalendarFragment()
                 }
                 R.id.settings -> {
-                    currFragment = EmptyFragment()
+                    currFragment = CalendarFragment()
                 }
             }
             val fm: FragmentManager = supportFragmentManager

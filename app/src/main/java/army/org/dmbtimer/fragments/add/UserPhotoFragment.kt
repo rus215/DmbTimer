@@ -3,10 +3,8 @@ package army.org.dmbtimer.fragments.add
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +21,7 @@ import kotlinx.android.synthetic.main.fragment_user_photo.*
 
 class UserPhotoFragment : Fragment() {
     private var listener: OnUserChoosePhotoListener? = null
-    private var userPhotoPath: String? = null
+    private var userPhotoUri: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,13 +30,13 @@ class UserPhotoFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_user_photo, container, false)
     }
 
-    private fun onPhotoChoose(file: String) {
-        listener?.onPhotoChoose(file)
+    private fun onPhotoChoose(uri: String) {
+        listener?.onPhotoChoose(uri)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userPhotoPath = arguments?.getString(ARG_PHOTO)
+        userPhotoUri = arguments?.getString(ARG_PHOTO)
     }
 
     override fun onAttach(context: Context) {
@@ -52,8 +50,9 @@ class UserPhotoFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        if (userPhotoPath != null)
-            initPhoto()
+        userPhotoUri?.let {
+            userPhoto.setImageURI(Uri.parse(userPhotoUri))
+        }
 
         userPhoto.setOnClickListener {
             Dexter.withActivity(activity)
@@ -62,8 +61,9 @@ class UserPhotoFragment : Fragment() {
                     override fun onPermissionGranted(response: PermissionGrantedResponse?) {
                         val intent = Intent()
                         intent.type = "image/*"
-                        intent.action = Intent.ACTION_PICK
-                        startActivityForResult(Intent.createChooser(intent, "Select photo"),
+                        intent.action = Intent.ACTION_GET_CONTENT
+                        startActivityForResult(
+                            Intent.createChooser(intent, "Выбрать фото"),
                             USER_PHOTO_CODE
                         )
                     }
@@ -92,20 +92,13 @@ class UserPhotoFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == USER_PHOTO_CODE && data != null) {
             val selectedImage = data.data
-            val cursor = activity?.contentResolver?.query(selectedImage!!, null, null, null, null)
-            cursor?.moveToFirst()
-            userPhotoPath = cursor?.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
-            cursor?.close()
 
-            initPhoto()
-            onPhotoChoose(userPhotoPath!!)
+            selectedImage?.let {
+                userPhoto.setImageURI(it)
+
+                onPhotoChoose(it.toString())
+            }
         }
-    }
-
-    private fun initPhoto() {
-        userPhoto.borderColor = Color.WHITE
-        userPhoto.borderWidth = 10
-        userPhoto.setImageBitmap(BitmapFactory.decodeFile(userPhotoPath))
     }
 
     override fun onDetach() {
@@ -114,7 +107,7 @@ class UserPhotoFragment : Fragment() {
     }
 
     interface OnUserChoosePhotoListener {
-        fun onPhotoChoose(file: String)
+        fun onPhotoChoose(uri: String)
     }
 
     companion object {

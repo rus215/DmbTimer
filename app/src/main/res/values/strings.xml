@@ -25,5 +25,8 @@
     <string name="step2">Теперь выберите дату</string>
     <string name="step3">Если хотите, можете добавить и фотографию</string>
     <string name="menu_stub">заглушка</string>
+    <string name="diagram">диаграмма</string>
+    <string name="statistic">статистика</string>
+    <string name="move_to_right">move to right</string>
 
 </resources>
