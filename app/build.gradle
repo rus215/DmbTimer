@@ -7,7 +7,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 2    9
+    compileSdkVersion 29
     defaultConfig {
         applicationId "army.com.dmbtimer"
         minSdkVersion 16
