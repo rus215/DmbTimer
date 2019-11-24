@@ -4,7 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"
+        android:scrollbars="vertical"
         tools:context=".fragments.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -50,7 +50,7 @@
                 android:src="@drawable/ic_add_soldier"
                 app:civ_border_color="@android:color/white"
                 app:civ_border_width="5dp"
-                app:layout_constraintBottom_toTopOf="@id/buttons_scroll"
+                app:layout_constraintBottom_toTopOf="@id/progressChipGroup"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pastOrLeftGroup" />
 
@@ -86,22 +86,16 @@
                 app:layout_constraintTop_toBottomOf="@+id/textName"
                 tools:text="0.264455%" />
 
-        <HorizontalScrollView
-                android:id="@+id/buttons_scroll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:scrollbars="none"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/userPhoto">
-
             <com.google.android.material.chip.ChipGroup
                     android:id="@+id/progressChipGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:singleLine="true"
-                    app:singleSelection="true">
+                    app:singleSelection="true"
+                    android:layout_marginTop="5dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/userPhoto"
+                    >
 
                 <com.google.android.material.chip.Chip
                         android:id="@+id/chipPercent"
@@ -148,7 +142,6 @@
                         app:chipStrokeColor="@android:color/white"
                         app:chipStrokeWidth="2dp" />
             </com.google.android.material.chip.ChipGroup>
-        </HorizontalScrollView>
 
         <TextView
                 android:id="@+id/textStatistic"
@@ -162,7 +155,7 @@
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/buttons_scroll" />
+                app:layout_constraintTop_toBottomOf="@+id/progressChipGroup" />
 
         <TextView
                 android:id="@+id/textPassedTitle"
@@ -325,23 +318,14 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
 
-        <HorizontalScrollView
-                android:id="@+id/statistic_buttons_scroll"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:scrollbars="none"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="4dp"
-                app:layout_constraintLeft_toRightOf="@+id/moveToLeft"
-                app:layout_constraintRight_toLeftOf="@+id/moveToRight"
-                app:layout_constraintTop_toBottomOf="@+id/barrier">
-
             <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/statisticChipGroup"
+                    android:id="@+id/statisticChipGroup1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:singleLine="true"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/barrier"
+                    android:layout_marginTop="5dp"
                     app:singleSelection="true">
 
                 <com.google.android.material.chip.Chip
@@ -366,54 +350,39 @@
                         app:chipBackgroundColor="@android:color/transparent"
                         app:chipStrokeColor="@android:color/white"
                         app:chipStrokeWidth="2dp" />
-
-                <com.google.android.material.chip.Chip
-                        android:id="@+id/chipMonthsWeeksAndDays"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checkable="true"
-                        android:text="@string/months_weeks_days"
-                        android:textColor="@android:color/white"
-                        app:chipBackgroundColor="@android:color/transparent"
-                        app:chipStrokeColor="@android:color/white"
-                        app:chipStrokeWidth="2dp" />
-
-                <com.google.android.material.chip.Chip
-                        android:id="@+id/chipWeeksDays"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checkable="true"
-                        android:text="@string/weeks_days"
-                        android:textColor="@android:color/white"
-                        app:chipBackgroundColor="@android:color/transparent"
-                        app:chipStrokeColor="@android:color/white"
-                        app:chipStrokeWidth="2dp" />
             </com.google.android.material.chip.ChipGroup>
-        </HorizontalScrollView>
 
-        <ImageView
-                android:id="@+id/moveToRight"
+        <com.google.android.material.chip.ChipGroup
+                android:id="@+id/statisticChipGroup2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_move_to_right"
-                android:contentDescription="@string/move_to_right"
-                android:background="@drawable/scroll_buttons_back"
-                app:layout_constraintTop_toTopOf="@+id/statistic_buttons_scroll"
-                app:layout_constraintBottom_toBottomOf="@+id/statistic_buttons_scroll"
-                app:layout_constraintRight_toRightOf="parent"
-                />
-
-        <ImageView
-                android:id="@+id/moveToLeft"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_move_to_left"
-                android:contentDescription="@string/move_to_right"
-                android:background="@drawable/scroll_buttons_back"
-                app:layout_constraintTop_toTopOf="@+id/statistic_buttons_scroll"
-                app:layout_constraintBottom_toBottomOf="@+id/statistic_buttons_scroll"
+                android:layout_marginTop="5dp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/statisticChipGroup1"
+                app:singleSelection="true">
+            <com.google.android.material.chip.Chip
+                    android:id="@+id/chipMonthsWeeksAndDays"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="@string/months_weeks_days"
+                    android:textColor="@android:color/white"
+                    app:chipBackgroundColor="@android:color/transparent"
+                    app:chipStrokeColor="@android:color/white"
+                    app:chipStrokeWidth="2dp" />
+
+            <com.google.android.material.chip.Chip
+                    android:id="@+id/chipWeeksDays"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checkable="true"
+                    android:text="@string/weeks_days"
+                    android:textColor="@android:color/white"
+                    app:chipBackgroundColor="@android:color/transparent"
+                    app:chipStrokeColor="@android:color/white"
+                    app:chipStrokeWidth="2dp" />
+        </com.google.android.material.chip.ChipGroup>
 
         <TextView
                 android:id="@+id/textDiagram"
@@ -427,7 +396,7 @@
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/statistic_buttons_scroll" />
+                app:layout_constraintTop_toBottomOf="@+id/statisticChipGroup2" />
 
         <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/diagram"

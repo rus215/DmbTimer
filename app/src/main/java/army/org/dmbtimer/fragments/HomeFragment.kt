@@ -9,9 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
-import android.widget.HorizontalScrollView
-import android.widget.Toast
-import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -100,45 +97,41 @@ class HomeFragment : Fragment() {
 
         //Инициализируем chips
         initChips()
-
-        //Инициализируем кнопки прокрутки
-        initScrollButtons()
-    }
-
-    private fun initScrollButtons() {
-        val onClickListener = View.OnClickListener {
-            it?.apply {
-                if (id == R.id.moveToLeft) {
-                    statistic_buttons_scroll.fullScroll(HorizontalScrollView.FOCUS_LEFT)
-                } else {
-                    statistic_buttons_scroll.fullScroll(HorizontalScrollView.FOCUS_RIGHT)
-                }
-            }
-
-        }
-
-        moveToRight.setOnClickListener(onClickListener)
-        moveToLeft.setOnClickListener(onClickListener)
     }
 
     private fun initChips() {
 
 
-        val onClickListener = View.OnClickListener {
+        val progressChipOnClickListener = View.OnClickListener {
             (it as CompoundButton).isChecked = true
         }
 
         //Chip progress
-        chipPercent.setOnClickListener(onClickListener)
-        chipSeconds.setOnClickListener(onClickListener)
-        chipMinutes.setOnClickListener(onClickListener)
-        chipHours.setOnClickListener(onClickListener)
+        chipPercent.setOnClickListener(progressChipOnClickListener)
+        chipSeconds.setOnClickListener(progressChipOnClickListener)
+        chipMinutes.setOnClickListener(progressChipOnClickListener)
+        chipHours.setOnClickListener(progressChipOnClickListener)
 
-        //Chip statistic
-        chipDays.setOnClickListener(onClickListener)
-        chipMonthDays.setOnClickListener(onClickListener)
-        chipMonthsWeeksAndDays.setOnClickListener(onClickListener)
-        chipWeeksDays.setOnClickListener(onClickListener)
+        val statisticChipOnClickListener1 = View.OnClickListener {
+            (it as CompoundButton).isChecked = true
+
+            //Убирем select с Chip statistic2
+            statisticChipGroup2.clearCheck()
+        }
+
+        val statisticChipOnClickListener2 = View.OnClickListener {
+            (it as CompoundButton).isChecked = true
+
+            //Убирем select с Chip statistic2
+            statisticChipGroup1.clearCheck()
+        }
+        //Chip statistic1
+        chipDays.setOnClickListener(statisticChipOnClickListener1)
+        chipMonthDays.setOnClickListener(statisticChipOnClickListener1)
+
+        //Chip statistic2
+        chipMonthsWeeksAndDays.setOnClickListener(statisticChipOnClickListener2)
+        chipWeeksDays.setOnClickListener(statisticChipOnClickListener2)
     }
 
     private fun calculate() {
@@ -247,11 +240,14 @@ class HomeFragment : Fragment() {
                     }
                 }
 
-                //Устанавливаем прогрес
-                //progressBar.percent(pastNum / totalNum)
-
                 //Рассчет даты и времени
-                when (statisticChipGroup.checkedChipId) {
+                val checkedId: Int = if (statisticChipGroup2.checkedChipId != -1) {
+                    statisticChipGroup2.checkedChipId
+                } else {
+                    statisticChipGroup1.checkedChipId
+                }
+
+                when (checkedId) {
                     R.id.chipDays -> {
 
                         passedDays = dateUtil.passedDays()
