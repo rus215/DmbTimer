@@ -104,6 +104,17 @@ class HomeFragment : Fragment() {
 
         val progressChipOnClickListener = View.OnClickListener {
             (it as CompoundButton).isChecked = true
+
+            when (it.id) {
+                R.id.chipDays, R.id.chipMonthDays -> {
+                    //Убираем галочку с statisticChipGroup2
+                    statisticChipGroup2.clearCheck()
+                }
+                R.id.chipMonthsWeeksAndDays, R.id.chipWeeksDays -> {
+                    //Убираем галочку с statisticChipGroup1
+                    statisticChipGroup1.clearCheck()
+                }
+            }
         }
 
         //Chip progress
@@ -112,26 +123,13 @@ class HomeFragment : Fragment() {
         chipMinutes.setOnClickListener(progressChipOnClickListener)
         chipHours.setOnClickListener(progressChipOnClickListener)
 
-        val statisticChipOnClickListener1 = View.OnClickListener {
-            (it as CompoundButton).isChecked = true
-
-            //Убирем select с Chip statistic2
-            statisticChipGroup2.clearCheck()
-        }
-
-        val statisticChipOnClickListener2 = View.OnClickListener {
-            (it as CompoundButton).isChecked = true
-
-            //Убирем select с Chip statistic2
-            statisticChipGroup1.clearCheck()
-        }
         //Chip statistic1
-        chipDays.setOnClickListener(statisticChipOnClickListener1)
-        chipMonthDays.setOnClickListener(statisticChipOnClickListener1)
+        chipDays.setOnClickListener(progressChipOnClickListener)
+        chipMonthDays.setOnClickListener(progressChipOnClickListener)
 
         //Chip statistic2
-        chipMonthsWeeksAndDays.setOnClickListener(statisticChipOnClickListener2)
-        chipWeeksDays.setOnClickListener(statisticChipOnClickListener2)
+        chipMonthsWeeksAndDays.setOnClickListener(progressChipOnClickListener)
+        chipWeeksDays.setOnClickListener(progressChipOnClickListener)
     }
 
     private fun calculate() {
