@@ -1,4 +1,4 @@
-package army.org.dmbtimer.fragments.add
+package army.org.dmbtimer.fragments.add.soldier
 
 import android.content.Context
 import android.os.Bundle

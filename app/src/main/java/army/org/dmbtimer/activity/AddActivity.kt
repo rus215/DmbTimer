@@ -7,9 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import army.org.dmbtimer.R
-import army.org.dmbtimer.fragments.add.UserDateFragment
-import army.org.dmbtimer.fragments.add.UserNameFragment
-import army.org.dmbtimer.fragments.add.UserPhotoFragment
+import army.org.dmbtimer.fragments.add.soldier.UserDateFragment
+import army.org.dmbtimer.fragments.add.soldier.UserNameFragment
+import army.org.dmbtimer.fragments.add.soldier.UserPhotoFragment
 import army.org.dmbtimer.room.database.Soldier
 import army.org.dmbtimer.room.database.SoldierViewModel
 import kotlinx.android.synthetic.main.activity_content_add.*
